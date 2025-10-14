@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		2CE052A82E9E59D000341B46 /* ASCII_Maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASCII_Maker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CE052B62E9E5DC600341B46 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +33,7 @@
 		2CE0529F2E9E59D000341B46 = {
 			isa = PBXGroup;
 			children = (
+				2CE052B62E9E5DC600341B46 /* .gitignore */,
 				2CE052AA2E9E59D000341B46 /* ASCII_Maker */,
 				2CE052A92E9E59D000341B46 /* Products */,
 			);
