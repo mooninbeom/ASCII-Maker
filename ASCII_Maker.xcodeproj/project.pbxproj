@@ -11,22 +11,9 @@
 		2CE052B62E9E5DC600341B46 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2CE053782E9E5F1300341B46 /* Exceptions for "ASCII_Maker" folder in "ASCII_Maker" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"ASCII-Maker-Info.plist",
-			);
-			target = 2CE052A72E9E59D000341B46 /* ASCII_Maker */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2CE052AA2E9E59D000341B46 /* ASCII_Maker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				2CE053782E9E5F1300341B46 /* Exceptions for "ASCII_Maker" folder in "ASCII_Maker" target */,
-			);
 			path = ASCII_Maker;
 			sourceTree = "<group>";
 		};
