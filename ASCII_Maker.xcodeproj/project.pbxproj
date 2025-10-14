@@ -11,10 +11,28 @@
 		2CE052B62E9E5DC600341B46 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2CE053782E9E5F1300341B46 /* Exceptions for "ASCII_Maker" folder in "ASCII_Maker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"ASCII-Maker-Info.plist",
+			);
+			target = 2CE052A72E9E59D000341B46 /* ASCII_Maker */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2CE052AA2E9E59D000341B46 /* ASCII_Maker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2CE053782E9E5F1300341B46 /* Exceptions for "ASCII_Maker" folder in "ASCII_Maker" target */,
+			);
 			path = ASCII_Maker;
+			sourceTree = "<group>";
+		};
+		2CE053742E9E5E8700341B46 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -33,8 +51,9 @@
 		2CE0529F2E9E59D000341B46 = {
 			isa = PBXGroup;
 			children = (
-				2CE052B62E9E5DC600341B46 /* .gitignore */,
 				2CE052AA2E9E59D000341B46 /* ASCII_Maker */,
+				2CE053742E9E5E8700341B46 /* Resources */,
+				2CE052B62E9E5DC600341B46 /* .gitignore */,
 				2CE052A92E9E59D000341B46 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +83,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2CE052AA2E9E59D000341B46 /* ASCII_Maker */,
+				2CE053742E9E5E8700341B46 /* Resources */,
 			);
 			name = ASCII_Maker;
 			packageProductDependencies = (
@@ -258,6 +278,7 @@
 				DEVELOPMENT_TEAM = VF8R3A969C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ASCII-Maker-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -270,6 +291,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mooni.ASCII-Maker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -286,6 +310,7 @@
 				DEVELOPMENT_TEAM = VF8R3A969C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ASCII-Maker-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -298,6 +323,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mooni.ASCII-Maker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
