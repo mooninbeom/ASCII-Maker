@@ -24,7 +24,7 @@ extension Color {
         case 6:
             r = Double((rgb & 0xFF0000) >> 16) / 255.0
             g = Double((rgb & 0x00FF00) >> 8) / 255.0
-            b = Double((rgb & 0x0000FF) >> 16) / 255.0
+            b = Double((rgb & 0x0000FF)) / 255.0
         default:
             r = 1
             g = 1
@@ -48,7 +48,7 @@ extension View {
 
 struct CustomColorModifier: ViewModifier {
     enum ColorList: String {
-        case background = "#0D1164"
+        case background = "#090B30"
         case text = "#640D5F"
         case primary = "#EA2264"
         case secondary = "#F78D60"
