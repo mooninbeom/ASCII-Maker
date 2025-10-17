@@ -9,7 +9,7 @@ import SwiftUI
 
 
 
-struct CustomFontModifier: ViewModifier {
+struct EnglishFontModifier: ViewModifier {
     var size: CGFloat
     
     func body(content: Content) -> some View {
@@ -18,11 +18,25 @@ struct CustomFontModifier: ViewModifier {
     }
 }
 
+struct KoreanFontModifier: ViewModifier {
+    let size: CGFloat
+    
+    func body(content: Content) -> some View {
+        content
+            .font(.custom("D2Coding", size: size))
+    }
+}
+
 
 
 extension View {
-    func customFont(size: CGFloat) -> some View {
+    func englishFont(size: CGFloat) -> some View {
         self
-            .modifier(CustomFontModifier(size: size))
+            .modifier(EnglishFontModifier(size: size))
+    }
+    
+    func koreanFont(size: CGFloat) -> some View {
+        self
+            .modifier(KoreanFontModifier(size: size))
     }
 }
