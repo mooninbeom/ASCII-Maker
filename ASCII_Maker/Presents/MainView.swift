@@ -10,12 +10,15 @@ import SwiftUI
 
 
 struct MainView: View {
+    @State private var viewModel: MainViewModel = .init()
+    
+    
     var body: some View {
         ZStack {
             Color.init(hex: "#090B30")
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
                 Button {
                     
                 } label: {
@@ -25,12 +28,14 @@ struct MainView: View {
                 .customColor(.secondary)
                 
                 Image(.mainLogo)
+                    .padding(.top, 5)
                 
                 Text("내 이미지를 손쉽게 ASCII ART로!")
                     .koreanFont(size: 15)
                     .customColor(.secondary)
+                    .padding(.top, 20)
                 
-                HStack {
+                HStack(alignment: .top, spacing: 0) {
                     Text("ASCII ART란?")
                         .koreanFont(size: 15)
                         .customColor(.secondary)
@@ -43,6 +48,7 @@ struct MainView: View {
                     }
                     .foregroundStyle(.gray)
                 }
+                .padding(.top, 5)
                 
                 
                 Button {
@@ -57,22 +63,29 @@ struct MainView: View {
                     }
                 }
                 .foregroundStyle(.white)
+                .padding(.top, 50)
                 
-                Spacer()
                 HStack {
-                    VStack {
+                    VStack(alignment: .leading, spacing: 0) {
                         Text("변환 품질")
                             .koreanFont(size: 25)
                             .customColor(.text)
+                            .padding(.bottom, 10)
                         
-                        qualityButton
-                        qualityButton
-                        qualityButton
-                        qualityButton
+                        ForEach(MainViewModel.QualityList.allCases) { quality in
+                            QualityListCell(
+                                currentQuality: $viewModel.quality,
+                                qualityList: quality
+                            ) { quality in
+                                viewModel.quality = quality
+                            }
+                            .padding(.bottom, 15)
+                        }
                     }
                     
                     Spacer()
                 }
+                .padding(.top, 80)
                 
                 Spacer()
                 
@@ -110,21 +123,35 @@ struct MainView: View {
         }
 
     }
+}
+
+
+private struct QualityListCell: View {
+    @Binding var currentQuality: MainViewModel.QualityList
     
-    private var qualityButton: some View {
+    let qualityList: MainViewModel.QualityList
+    
+    let action: (MainViewModel.QualityList) -> Void
+    
+    var body: some View {
         HStack {
             Circle()
                 .frame(width: 20, height: 20)
                 .foregroundStyle(.white)
                 .overlay {
-                    Circle()
-                        .frame(width: 14, height: 14)
-                        .customColor(.primary)
+                    if currentQuality == qualityList {
+                        Circle()
+                            .frame(width: 14, height: 14)
+                            .customColor(.primary)
+                    }
                 }
             
-            Text("원본 화질")
+            Text(qualityList.text)
                 .koreanFont(size: 14)
                 .foregroundStyle(.white)
+        }
+        .onTapGesture {
+            action(self.qualityList)
         }
     }
 }
