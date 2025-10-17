@@ -5,6 +5,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>JetBrainsMono-Light.ttf</string>
+		<string>D2Coding.ttf</string>
 	</array>
 </dict>
 </plist>
