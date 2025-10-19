@@ -10,13 +10,24 @@ import Foundation
 
 @Observable
 class MainViewModel {
+    public var screen: ScreenList = .main
+    
     public var quality: QualityList = .original
     
-    
-    
-    
-    
-    
+    public var isSettingScreenPresented: Bool = false
+}
+
+
+extension MainViewModel {
+    enum ScreenList: Identifiable {
+        var id: Self { self }
+        
+        case main
+        
+        case setting
+        case history
+        case info
+    }
     
     enum QualityList: Int, CaseIterable, Identifiable {
         var id: Self { self }
