@@ -34,7 +34,7 @@ struct SettingScreen: View {
             }
 
             Button {
-                
+                self.viewModel.screen = .info
             } label: {
                 Text("개발자 정보 >")
                     .customColor(.secondary)

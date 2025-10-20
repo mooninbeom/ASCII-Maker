@@ -44,8 +44,9 @@ struct MainView: View {
                     HistoryView(mainViewModel: $viewModel)
                         .padding(.horizontal, 30)
                 case .info:
-                    EmptyView()
-                }   
+                    DeveloperInfoScreen(mainViewModel: $viewModel)
+                        .padding(.horizontal, 30)
+                }
             }
         }
         .overlay {
