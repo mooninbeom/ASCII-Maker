@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MessageUI
 
 
 
@@ -55,4 +56,19 @@ struct HistoryCell: View {
 
 #Preview {
     HistoryView(mainViewModel: .constant(MainViewModel()))
+}
+
+
+
+
+extension HistoryView {
+    private func sendMail() {
+        
+    }
+    
+    
+    
+    private func evaluateMailAvailable() -> Bool {
+        MFMailComposeViewController.canSendMail()
+    }
 }
