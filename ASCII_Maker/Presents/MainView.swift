@@ -41,7 +41,8 @@ struct MainView: View {
                         .padding(.horizontal, 30)
 
                 case .history:
-                    EmptyView()
+                    HistoryView(mainViewModel: $viewModel)
+                        .padding(.horizontal, 30)
                 case .info:
                     EmptyView()
                 }   

@@ -10,6 +10,8 @@ import SwiftUI
 
 
 struct HistoryView: View {
+    @Binding var mainViewModel: MainViewModel
+    
     
     var body: some View {
         VStack {
@@ -58,5 +60,5 @@ struct HistoryCell: View {
 
 
 #Preview {
-    HistoryView()
+    HistoryView(mainViewModel: .constant(MainViewModel()))
 }
