@@ -6,23 +6,20 @@
 //
 
 import SwiftUI
+import MessageUI
 
 
 
 struct HistoryView: View {
+    @Binding var mainViewModel: MainViewModel
+    
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Text("히스토리")
-                Spacer()
+            CustomNavigationBar(type: .history) {
+                mainViewModel.screen = .setting
             }
-            .overlay(alignment: .leading) {
-                Text("<")
-            }
-            .customColor(.text)
-            
+            .padding(.top, 30)
             
             ScrollView(.vertical) {
                 HistoryCell(color: .text)
@@ -46,8 +43,8 @@ struct HistoryCell: View {
                 let width = UIScreen.main.bounds.width
                 
                 
-                path.move(to: .init(x: 75, y: 0))
-                path.addLine(to: .init(x: width - 75, y: 0.0))
+                path.move(to: .init(x: 45, y: 0))
+                path.addLine(to: .init(x: width - 105, y: 0.0))
             }
             .stroke(style: .init(lineWidth: 2, dash: [10, 4]))
             .customColor(color)
@@ -58,5 +55,20 @@ struct HistoryCell: View {
 
 
 #Preview {
-    HistoryView()
+    HistoryView(mainViewModel: .constant(MainViewModel()))
+}
+
+
+
+
+extension HistoryView {
+    private func sendMail() {
+        
+    }
+    
+    
+    
+    private func evaluateMailAvailable() -> Bool {
+        MFMailComposeViewController.canSendMail()
+    }
 }

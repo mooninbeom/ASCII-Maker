@@ -10,6 +10,7 @@ import SwiftUI
 
 
 struct ArtInfoView: View {
+    let action: () -> Void
     
     
     var body: some View {
@@ -50,7 +51,7 @@ struct ArtInfoView: View {
             .customColor(.secondary)
             
             Button {
-                
+                action()
             } label: {
                 ZStack {
                     Rectangle()
@@ -72,5 +73,5 @@ struct ArtInfoView: View {
 
 
 #Preview {
-    ArtInfoView()
+    ArtInfoView {}
 }

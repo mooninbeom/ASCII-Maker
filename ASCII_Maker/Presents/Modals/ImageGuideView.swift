@@ -11,12 +11,9 @@ import SwiftUI
 
 
 struct ImageGuideView: View {
-    
+    let action: () -> Void
     
     var body: some View {
-//        ZStack {
-//            Color(hex: "#0D1164")
-            
             VStack(alignment: .leading) {
                 Text("사진 가이드")
                     .koreanFont(size: 20)
@@ -50,7 +47,7 @@ struct ImageGuideView: View {
                 .customColor(.secondary)
                 
                 Button {
-                    
+                    action()
                 } label: {
                     ZStack {
                         Rectangle()
@@ -75,5 +72,5 @@ struct ImageGuideView: View {
 
 
 #Preview {
-    ImageGuideView()
+    ImageGuideView {}
 }
