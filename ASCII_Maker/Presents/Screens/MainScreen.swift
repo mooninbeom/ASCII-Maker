@@ -35,7 +35,11 @@ struct MainScreen: View {
             
             
             Button {
-                viewModel.isImageGuidePresented.toggle()
+                if UserDefaults.noMoreGuide {
+                    viewModel.isPhotosPickerPresented.toggle()
+                } else {
+                    viewModel.isImageGuidePresented.toggle()
+                }
             } label: {
                 if let uiImage = viewModel.currentImage {
                     Image(uiImage: uiImage)

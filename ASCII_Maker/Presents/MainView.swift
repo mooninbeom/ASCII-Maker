@@ -77,7 +77,11 @@ struct MainView: View {
                             self.viewModel.isImageGuidePresented = false
                         }
                     
-                    ImageGuideView {
+                    ImageGuideView { noMoreGuide in
+                        if noMoreGuide {
+                            UserDefaults.noMoreGuide = true
+                        }
+                        
                         self.viewModel.isPhotosPickerPresented.toggle()
                         self.viewModel.isImageGuidePresented = false
                     }
