@@ -15,6 +15,9 @@ class MainViewModel {
     public var quality: QualityList = .original
     
     public var isSettingScreenPresented: Bool = false
+    
+    public var isASCIIInfomationPresented: Bool = false
+    public var isImageGuidePresented: Bool = false
 }
 
 

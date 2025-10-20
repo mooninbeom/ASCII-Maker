@@ -20,9 +20,7 @@ struct MainView: View {
             
             VStack(spacing: 0) {
                 Button {
-                    withAnimation {
-                        viewModel.screen = viewModel.screen == .main ? .setting : .main
-                    }
+                    viewModel.screen = viewModel.screen == .main ? .setting : .main
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 30))
@@ -37,8 +35,6 @@ struct MainView: View {
                 case .main:
                     MainScreen(viewModel: $viewModel)
                         .padding(.horizontal, 30)
-//                        .transition(.push(from: viewModel.isSettingViewPresented ? .leading : .trailing))
-                        .transition(.push(from: .trailing))
                     
                 case .setting:
                     SettingScreen(viewModel: $viewModel)
@@ -51,7 +47,31 @@ struct MainView: View {
                 }   
             }
         }
-
+        .overlay {
+            if viewModel.isASCIIInfomationPresented {
+                ZStack {
+                    Color.gray.opacity(0.7)
+                        .ignoresSafeArea()
+                    
+                    ArtInfoView {
+                        viewModel.isASCIIInfomationPresented.toggle()
+                    }
+                    .padding(20)
+                }
+            }
+            
+            if viewModel.isImageGuidePresented {
+                ZStack {
+                    Color.gray.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    ImageGuideView {
+                        viewModel.isImageGuidePresented.toggle()
+                    }
+                    .padding(20)
+                }
+            }
+        }
     }
 }
 

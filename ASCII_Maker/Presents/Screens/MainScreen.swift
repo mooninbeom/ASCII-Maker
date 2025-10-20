@@ -24,7 +24,7 @@ struct MainScreen: View {
                     .customColor(.secondary)
                 
                 Button {
-                    
+                    viewModel.isASCIIInfomationPresented.toggle()
                 } label: {
                     Image(systemName: "info.circle")
                         .font(.system(size: 10))
@@ -73,7 +73,7 @@ struct MainScreen: View {
             Spacer()
             
             Button {
-                
+                viewModel.isImageGuidePresented.toggle()
             } label: {
                 ZStack {
                     Rectangle()
