@@ -5,7 +5,8 @@
 //  Created by 문인범 on 10/17/25.
 //
 
-import Foundation
+import SwiftUI
+import PhotosUI
 
 
 @Observable
@@ -18,6 +19,20 @@ class MainViewModel {
     
     public var isASCIIInfomationPresented: Bool = false
     public var isImageGuidePresented: Bool = false
+    
+    public var isPhotosPickerPresented: Bool = false
+    public var currentImage: UIImage?
+    
+    
+    public var photosPickerItem: PhotosPickerItem? {
+        didSet {
+            Task {
+                if let newItem = try await photosPickerItem?.loadTransferable(type: PhotoTransfer.self) {
+                    self.currentImage = newItem.image
+                }
+            }
+        }
+    }
 }
 
 

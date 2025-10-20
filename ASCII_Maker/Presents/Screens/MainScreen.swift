@@ -35,14 +35,22 @@ struct MainScreen: View {
             
             
             Button {
-                
+                viewModel.isImageGuidePresented.toggle()
             } label: {
-                VStack {
-                    Text("이미지 선택하기")
-                        .koreanFont(size: 15)
+                if let uiImage = viewModel.currentImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 200, height: 200)
                     
-                    Image(systemName: "photo")
-                        .font(.system(size: 100))
+                } else {
+                    VStack {
+                        Text("이미지 선택하기")
+                            .koreanFont(size: 15)
+                        
+                        Image(systemName: "photo")
+                            .font(.system(size: 100))
+                    }
                 }
             }
             .foregroundStyle(.white)
@@ -73,7 +81,7 @@ struct MainScreen: View {
             Spacer()
             
             Button {
-                viewModel.isImageGuidePresented.toggle()
+                
             } label: {
                 ZStack {
                     Rectangle()
