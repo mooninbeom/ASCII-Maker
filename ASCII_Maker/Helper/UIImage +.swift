@@ -9,7 +9,7 @@ import UIKit
 
 
 extension UIImage {
-    public func resizePixel(to size: CGSize) -> UIImage? {
+    public func resizeImage(to size: CGSize) -> UIImage {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
         

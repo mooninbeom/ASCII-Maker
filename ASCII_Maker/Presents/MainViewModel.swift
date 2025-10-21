@@ -129,5 +129,18 @@ extension MainViewModel {
                 "낮음(100 by 100px)"
             }
         }
+        
+        public var pixels: CGFloat {
+            switch self {
+            case .original:
+                0
+            case .high:
+                400
+            case .medium:
+                200
+            case .low:
+                100
+            }
+        }
     }
 }
