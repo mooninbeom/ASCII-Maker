@@ -13,7 +13,7 @@ import PhotosUI
 class MainViewModel {
     public var screen: ScreenList = .main
     
-    public var quality: QualityList = .original
+    public var quality: QualityList?
     
     public var isSettingScreenPresented: Bool = false
     
@@ -22,14 +22,76 @@ class MainViewModel {
     
     public var isPhotosPickerPresented: Bool = false
     public var currentImage: UIImage?
+    public var currentPixels: (Int, Int)?
+    
+    public var originalButton: Bool = true
+    public var highButton: Bool = true
+    public var mediumButton: Bool = true
+    public var lowButton: Bool = true
     
     
     public var photosPickerItem: PhotosPickerItem? {
         didSet {
             Task {
-                if let newItem = try await photosPickerItem?.loadTransferable(type: PhotoTransfer.self) {
-                    self.currentImage = newItem.image
+                try await preprocessingImage()
+            }
+        }
+    }
+}
+
+extension MainViewModel {
+    private func preprocessingImage() async throws {
+        if let newItem = try await photosPickerItem?.loadTransferable(type: PhotoTransfer.self) {
+            self.currentImage = newItem.image
+            
+            if let cgImage = newItem.image.cgImage {
+                let width = cgImage.width
+                let height = cgImage.height
+                let ratio = width / height
+                
+                self.currentPixels = (width, height)
+                
+                self.quality = .original
+                originalButton = false
+                
+                if ratio < 1 {
+                    if height < 100 {
+                        highButton = true
+                        mediumButton = true
+                        lowButton = true
+                    } else if height < 200 {
+                        highButton = true
+                        mediumButton = true
+                        lowButton = false
+                    } else if height < 400 {
+                        highButton = true
+                        mediumButton = false
+                        lowButton = false
+                    } else {
+                        highButton = false
+                        mediumButton = false
+                        lowButton = false
+                    }
+                } else {
+                    if width < 100 {
+                        highButton = true
+                        mediumButton = true
+                        lowButton = true
+                    } else if width < 200 {
+                        highButton = true
+                        mediumButton = true
+                        lowButton = false
+                    } else if width < 400 {
+                        highButton = true
+                        mediumButton = false
+                        lowButton = false
+                    } else {
+                        highButton = false
+                        mediumButton = false
+                        lowButton = false
+                    }
                 }
+                
             }
         }
     }
