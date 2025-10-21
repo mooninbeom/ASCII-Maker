@@ -29,6 +29,8 @@ class MainViewModel {
     public var mediumButton: Bool = true
     public var lowButton: Bool = true
     
+    public var isResultScreenPresented: Bool = false
+    
     
     public var photosPickerItem: PhotosPickerItem? {
         didSet {
@@ -36,6 +38,12 @@ class MainViewModel {
                 try await preprocessingImage()
             }
         }
+    }
+}
+
+extension MainViewModel {
+    public var transferButtonDisabled: Bool {
+        self.quality == nil
     }
 }
 

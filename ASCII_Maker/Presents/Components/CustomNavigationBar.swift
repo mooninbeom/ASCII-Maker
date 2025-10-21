@@ -45,6 +45,7 @@ struct CustomNavigationBar: View {
                     } label: {
                         Image(systemName: trailingButton)
                             .font(.system(size: 30))
+                            .customColor(type.navigationColor)
                     }
                 }
             }
@@ -79,12 +80,14 @@ struct CustomNavigationBar: View {
         case setting
         case history
         case developerInfo
+        case result
         
         public var navigationTitle: String {
             switch self {
             case .setting: "설정"
             case .history: "히스토리"
             case .developerInfo: "개발자 정보"
+            case .result: "결과"
             }
         }
         
@@ -92,6 +95,7 @@ struct CustomNavigationBar: View {
             switch self {
             case .setting, .developerInfo: .secondary
             case .history: .text
+            case .result: .primary
             }
         }
     }

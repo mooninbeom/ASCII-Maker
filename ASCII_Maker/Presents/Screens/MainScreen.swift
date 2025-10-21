@@ -85,13 +85,18 @@ struct MainScreen: View {
             Spacer()
             
             Button {
-                
+                viewModel.isResultScreenPresented.toggle()
             } label: {
                 ZStack {
-                    Rectangle()
-                        .frame(height: 80)
-                        .customColor(.primary)
-                    
+                    if viewModel.transferButtonDisabled {
+                        Rectangle()
+                            .frame(height: 80)
+                            .foregroundStyle(.gray)
+                    } else {
+                        Rectangle()
+                            .frame(height: 80)
+                            .customColor(.primary)
+                    }
                     
                     HStack(spacing: 20) {
                         Image(systemName: "photo")
@@ -109,6 +114,10 @@ struct MainScreen: View {
                     }
                 }
             }
+            .disabled(viewModel.transferButtonDisabled)
+        }
+        .fullScreenCover(isPresented: $viewModel.isResultScreenPresented) {
+            ResultScreen(viewModel: $viewModel)
         }
     }
     
