@@ -13,6 +13,9 @@ struct CustomNavigationBar: View {
     
     let dismiss: () -> Void
     
+    let trailingButton: String?
+    let trailingAction: (() -> Void)?
+    
     
     var body: some View {
         VStack(spacing: 5) {
@@ -33,6 +36,18 @@ struct CustomNavigationBar: View {
                 .koreanFont(size: 30)
                 .customColor(type.navigationColor)
             }
+            .overlay(alignment: .trailing) {
+                if let trailingButton = trailingButton,
+                   let trailingAction = trailingAction
+                {
+                    Button {
+                        trailingAction()
+                    } label: {
+                        Image(systemName: trailingButton)
+                            .font(.system(size: 30))
+                    }
+                }
+            }
             
             Path { path in
                 let width = UIScreen.main.bounds.width
@@ -45,6 +60,18 @@ struct CustomNavigationBar: View {
             .customColor(type.navigationColor)
             .frame(height: 2)
         }
+    }
+    
+    init(
+        type: NavigationList,
+        dismiss: @escaping () -> Void,
+        trailingButton: String? = nil,
+        trailingAction: (() -> Void)? = nil
+    ) {
+        self.type = type
+        self.dismiss = dismiss
+        self.trailingButton = trailingButton
+        self.trailingAction = trailingAction
     }
     
     
