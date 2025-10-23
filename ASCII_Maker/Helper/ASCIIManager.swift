@@ -16,7 +16,18 @@ public enum ASCIIManager {
         let resizedImage: UIImage = {
             switch quality {
             case .original:
-                return image.resizeImage(to: .init(width: image.size.width * image.scale, height: image.size.height * image.scale))
+                if image.size.width * image.scale > 500 || image.size.height * image.scale > 500 {
+                    return image.resizeImage(
+                        to: .init(width: 500, height: 500)
+                    )
+                } else {
+                    return image.resizeImage(
+                        to: .init(
+                            width: image.size.width * image.scale,
+                            height: image.size.height * image.scale
+                        )
+                    )
+                }
             default:
                 if ratio < 1 {
                     let width = quality.pixels * ratio

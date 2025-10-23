@@ -9,6 +9,8 @@ import SwiftUI
 
 
 struct MainScreen: View {
+    @State private var isPopoverPresented: Bool = false
+    
     @Binding var viewModel: MainViewModel
     
     var body: some View {
@@ -68,9 +70,28 @@ struct MainScreen: View {
                             .customColor(.text)
                         
                         if let currentPixels = viewModel.currentPixels {
-                            Text("현재 픽셀 수: \(currentPixels.0) x \(currentPixels.1)px")
-                                .koreanFont(size: 14)
-                                .foregroundStyle(.white)
+                            HStack(alignment: .center, spacing: 0) {
+                                Text("현재 픽셀 수: \(currentPixels.0) x \(currentPixels.1)px")
+                                    .koreanFont(size: 14)
+                                    .foregroundStyle(.white)
+                                
+                                if currentPixels.0 > 500 || currentPixels.1 > 500 {
+                                    Button {
+                                        self.isPopoverPresented.toggle()
+                                    } label: {
+                                        Image(systemName: "exclamationmark.circle")
+                                            .font(.system(size: 15))
+                                    }
+                                    .customColor(.primary)
+                                    .popover(isPresented: self.$isPopoverPresented) {
+                                        Text("현재 이미지가 너무 커 원본 변환 시 500 x 500px로 조절 됩니다.")
+                                            .koreanFont(size: 14)
+                                            .customColor(.secondary)
+                                            .presentationCompactAdaptation(.popover)
+                                            .presentationBackground(Color(hex: "#0D1164"))
+                                    }
+                                }
+                            }
                         }
                     }
                     .padding(.bottom, 10)
