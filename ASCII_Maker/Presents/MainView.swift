@@ -54,6 +54,12 @@ struct MainView: View {
             }
         }
         .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .tint(Color(hex: "#EA2264"))
+            }
+            
             if viewModel.isASCIIInfomationPresented {
                 ZStack {
                     Color.gray.opacity(0.7)

@@ -25,9 +25,7 @@ struct ResultScreen: View {
             )
             .padding(.horizontal, 30)
             
-            ScrollView([.horizontal, .vertical]) {
-                
-            }
+            ZoomableScrollView(text: viewModel.resultText ?? "알 수 없음")
         }
         .background(Color(hex: "#090B30"))
     }

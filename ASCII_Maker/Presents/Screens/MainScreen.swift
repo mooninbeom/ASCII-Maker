@@ -85,7 +85,7 @@ struct MainScreen: View {
             Spacer()
             
             Button {
-                viewModel.isResultScreenPresented.toggle()
+                viewModel.convertButtonTapped()
             } label: {
                 ZStack {
                     if viewModel.transferButtonDisabled {

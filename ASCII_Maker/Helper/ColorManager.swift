@@ -35,6 +35,30 @@ extension Color {
     }
 }
 
+extension UIColor {
+    convenience init(hex: String) {
+        var hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        if hexString.hasPrefix("#") { hexString.removeFirst() }
+        
+        var rgb: UInt64 = 0
+        Scanner(string: hexString).scanHexInt64(&rgb)
+        let r, g, b: Double
+        
+        switch hexString.count {
+        case 6:
+            r = Double((rgb & 0xFF0000) >> 16) / 255.0
+            g = Double((rgb & 0x00FF00) >> 8) / 255.0
+            b = Double((rgb & 0x0000FF)) / 255.0
+        default:
+            r = 1
+            g = 1
+            b = 1
+        }
+        
+        self.init(red: r, green: g, blue: b, alpha: 1)
+    }
+}
+
 
 /**
  ViewModifier 익스텐션

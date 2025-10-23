@@ -13,10 +13,10 @@ public enum ASCIIManager {
         
         let ratio = (image.size.width) / (image.size.height)
         
-        var resizedImage: UIImage = {
+        let resizedImage: UIImage = {
             switch quality {
             case .original:
-                return image
+                return image.resizeImage(to: .init(width: image.size.width * image.scale, height: image.size.height * image.scale))
             default:
                 if ratio < 1 {
                     let width = quality.pixels * ratio
@@ -39,7 +39,6 @@ public enum ASCIIManager {
         let width = cgImage.width
         let height = cgImage.height
         
-//        let palette = "@#%&WM$8o."
 //        let palette = ["@", "#", "%", "&", "W", "M", "$", "8", "o", "."]
         let palette = ["@", "$", "#", "Y", "!", "=", "+", "~", "-", " "]
         
@@ -55,10 +54,7 @@ public enum ASCIIManager {
                 let brightness = (0.299 * Float(r) + 0.587 * Float(g) + 0.114 * Float(b))
                 let brightnessLevel = floor(brightness / 25.6)
                 
-//                resultText += palette[9 - Int(brightnessLevel)]
                 resultText += alpha == 0 ? " " : palette[Int(brightnessLevel)]
-                
-                print(r, g, b, bytes[offset+3], brightnessLevel, palette[9 - Int(brightnessLevel)])
             }
             
             resultText += "\n"

@@ -14,6 +14,8 @@ class MainViewModel {
     public var screen: ScreenList = .main
     
     public var quality: QualityList?
+    public var isLoading: Bool = false
+    public var resultText: String?
     
     public var isSettingScreenPresented: Bool = false
     
@@ -48,6 +50,33 @@ extension MainViewModel {
 }
 
 extension MainViewModel {
+    public func convertButtonTapped() {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let image = currentImage,
+              let quality = quality
+        else {
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+            return
+        }
+        
+        DispatchQueue.global().async {
+            
+            let result = ASCIIManager.convertToASCII(image: image, quality: quality)
+            
+            DispatchQueue.main.async {
+                self.resultText = result
+                self.isResultScreenPresented = true
+                self.isLoading = false
+            }
+        }
+    }
+    
+    
     private func preprocessingImage() async throws {
         if let newItem = try await photosPickerItem?.loadTransferable(type: PhotoTransfer.self) {
             self.currentImage = newItem.image
