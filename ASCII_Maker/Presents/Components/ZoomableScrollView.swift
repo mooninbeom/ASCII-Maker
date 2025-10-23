@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 
 struct ZoomableScrollView: UIViewControllerRepresentable {
@@ -24,6 +25,9 @@ struct ZoomableScrollView: UIViewControllerRepresentable {
 
 class ZoomableScrollViewController: UIViewController {
     let text: String
+    
+    let imageSavePublisher = NotificationCenter.default.publisher(for: .saveASCIIImage)
+    private var cancellables: Set<AnyCancellable> = []
     
     init(text: String) {
         self.text = text
@@ -54,6 +58,7 @@ class ZoomableScrollViewController: UIViewController {
     
     override func viewDidLoad() {
         setUp()
+        binding()
     }
     
     override func viewDidLayoutSubviews() {
@@ -66,6 +71,11 @@ class ZoomableScrollViewController: UIViewController {
         scrollView.minimumZoomScale = minScale
         scrollView.maximumZoomScale = 20
         scrollView.zoomScale = minScale
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.cancellables.forEach { $0.cancel() }
+        super.viewDidDisappear(animated)
     }
 }
 
@@ -90,6 +100,24 @@ extension ZoomableScrollViewController: UIScrollViewDelegate {
             label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
         ])
+    }
+    
+    private func binding() {
+        self.imageSavePublisher
+            .sink { [weak self] _ in
+                if let self = self {
+                    saveImage(label: self.label)
+                }
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    private func saveImage(label: UILabel) {
+        let renderer = UIGraphicsImageRenderer(bounds: label.bounds)
+        let image = renderer.image { context in
+            label.drawHierarchy(in: label.bounds, afterScreenUpdates: true)
+        }
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {

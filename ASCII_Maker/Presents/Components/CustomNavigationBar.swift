@@ -8,13 +8,15 @@
 import SwiftUI
 
 
-struct CustomNavigationBar: View {
+struct CustomNavigationBar<Content: View>: View {
     let type: NavigationList
+    
+    let trailingButton: Content?
     
     let dismiss: () -> Void
     
-    let trailingButton: String?
-    let trailingAction: (() -> Void)?
+//    let trailingButton: String?
+//    let trailingAction: (() -> Void)?
     
     
     var body: some View {
@@ -37,16 +39,10 @@ struct CustomNavigationBar: View {
                 .customColor(type.navigationColor)
             }
             .overlay(alignment: .trailing) {
-                if let trailingButton = trailingButton,
-                   let trailingAction = trailingAction
-                {
-                    Button {
-                        trailingAction()
-                    } label: {
-                        Image(systemName: trailingButton)
-                            .font(.system(size: 30))
-                            .customColor(type.navigationColor)
-                    }
+                if let trailingButton = trailingButton {
+                    trailingButton
+                        .font(.system(size: 30))
+                        .customColor(type.navigationColor)
                 }
             }
             
@@ -66,13 +62,11 @@ struct CustomNavigationBar: View {
     init(
         type: NavigationList,
         dismiss: @escaping () -> Void,
-        trailingButton: String? = nil,
-        trailingAction: (() -> Void)? = nil
+        @ViewBuilder trailingButton: () -> Content
     ) {
         self.type = type
         self.dismiss = dismiss
-        self.trailingButton = trailingButton
-        self.trailingAction = trailingAction
+        self.trailingButton = trailingButton()
     }
     
     

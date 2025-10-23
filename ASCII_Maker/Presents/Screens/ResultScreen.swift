@@ -18,9 +18,18 @@ struct ResultScreen: View {
                 dismiss: {
                     viewModel.isResultScreenPresented = false
                 },
-                trailingButton: "square.and.arrow.up",
-                trailingAction: {
-                    
+                trailingButton: {
+                    HStack {
+                        Button {
+                            NotificationCenter.default.post(name: .saveASCIIImage, object: nil)
+                        } label: {
+                            Image(systemName: "photo")
+                        }
+                        
+                        ShareLink(item: viewModel.resultText ?? "알 수 없음") {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
                 }
             )
             .padding(.horizontal, 30)
@@ -29,4 +38,8 @@ struct ResultScreen: View {
         }
         .background(Color(hex: "#090B30"))
     }
+}
+
+extension Notification.Name {
+    static let saveASCIIImage = Notification.Name("saveASCIIImage")
 }
