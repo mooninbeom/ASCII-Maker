@@ -18,7 +18,7 @@ struct HistoryView: View {
         VStack {
             CustomNavigationBar(type: .history) {
                 mainViewModel.screen = .setting
-            }
+            } trailingButton: { EmptyView() }
             .padding(.top, 30)
             
             ScrollView(.vertical) {

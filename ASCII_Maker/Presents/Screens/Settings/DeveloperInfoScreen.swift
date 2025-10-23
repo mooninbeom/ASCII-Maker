@@ -15,7 +15,7 @@ struct DeveloperInfoScreen: View {
         VStack {
             CustomNavigationBar(type: .developerInfo) {
                 mainViewModel.screen = .setting
-            }
+            } trailingButton: { EmptyView() }
             
             Spacer()
             

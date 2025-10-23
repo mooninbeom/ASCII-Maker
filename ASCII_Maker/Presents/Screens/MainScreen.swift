@@ -35,14 +35,26 @@ struct MainScreen: View {
             
             
             Button {
-                
+                if UserDefaults.noMoreGuide {
+                    viewModel.isPhotosPickerPresented.toggle()
+                } else {
+                    viewModel.isImageGuidePresented.toggle()
+                }
             } label: {
-                VStack {
-                    Text("이미지 선택하기")
-                        .koreanFont(size: 15)
+                if let uiImage = viewModel.currentImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 200, height: 200)
                     
-                    Image(systemName: "photo")
-                        .font(.system(size: 100))
+                } else {
+                    VStack {
+                        Text("이미지 선택하기")
+                            .koreanFont(size: 15)
+                        
+                        Image(systemName: "photo")
+                            .font(.system(size: 100))
+                    }
                 }
             }
             .foregroundStyle(.white)
@@ -50,20 +62,20 @@ struct MainScreen: View {
             
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("변환 품질")
-                        .koreanFont(size: 25)
-                        .customColor(.text)
-                        .padding(.bottom, 10)
-                    
-                    ForEach(MainViewModel.QualityList.allCases) { quality in
-                        QualityListCell(
-                            currentQuality: $viewModel.quality,
-                            qualityList: quality
-                        ) { quality in
-                            viewModel.quality = quality
+                    Group {
+                        Text("변환 품질")
+                            .koreanFont(size: 25)
+                            .customColor(.text)
+                        
+                        if let currentPixels = viewModel.currentPixels {
+                            Text("현재 픽셀 수: \(currentPixels.0) x \(currentPixels.1)px")
+                                .koreanFont(size: 14)
+                                .foregroundStyle(.white)
                         }
-                        .padding(.bottom, 15)
                     }
+                    .padding(.bottom, 10)
+                    
+                    qualityButton
                 }
                 
                 Spacer()
@@ -73,13 +85,18 @@ struct MainScreen: View {
             Spacer()
             
             Button {
-                viewModel.isImageGuidePresented.toggle()
+                viewModel.convertButtonTapped()
             } label: {
                 ZStack {
-                    Rectangle()
-                        .frame(height: 80)
-                        .customColor(.primary)
-                    
+                    if viewModel.transferButtonDisabled {
+                        Rectangle()
+                            .frame(height: 80)
+                            .foregroundStyle(.gray)
+                    } else {
+                        Rectangle()
+                            .frame(height: 80)
+                            .customColor(.primary)
+                    }
                     
                     HStack(spacing: 20) {
                         Image(systemName: "photo")
@@ -97,13 +114,59 @@ struct MainScreen: View {
                     }
                 }
             }
+            .disabled(viewModel.transferButtonDisabled)
+        }
+        .fullScreenCover(isPresented: $viewModel.isResultScreenPresented) {
+            ResultScreen(viewModel: $viewModel)
+        }
+    }
+    
+    
+    public var qualityButton: some View {
+        Group {
+            QualityListCell(
+                currentQuality: $viewModel.quality,
+                disabled: $viewModel.originalButton,
+                qualityList: .original
+            ) { quality in
+                viewModel.quality = quality
+            }
+            .padding(.bottom, 15)
+            
+            QualityListCell(
+                currentQuality: $viewModel.quality,
+                disabled: $viewModel.highButton,
+                qualityList: .high
+            ) { quality in
+                viewModel.quality = quality
+            }
+            .padding(.bottom, 15)
+            
+            QualityListCell(
+                currentQuality: $viewModel.quality,
+                disabled: $viewModel.mediumButton,
+                qualityList: .medium
+            ) { quality in
+                viewModel.quality = quality
+            }
+            .padding(.bottom, 15)
+            
+            QualityListCell(
+                currentQuality: $viewModel.quality,
+                disabled: $viewModel.lowButton,
+                qualityList: .low
+            ) { quality in
+                viewModel.quality = quality
+            }
+            .padding(.bottom, 15)
         }
     }
 }
 
 
 private struct QualityListCell: View {
-    @Binding var currentQuality: MainViewModel.QualityList
+    @Binding var currentQuality: MainViewModel.QualityList?
+    @Binding var disabled: Bool
     
     let qualityList: MainViewModel.QualityList
     
@@ -113,12 +176,12 @@ private struct QualityListCell: View {
         HStack {
             Circle()
                 .frame(width: 20, height: 20)
-                .foregroundStyle(.white)
+                .foregroundStyle(disabled ? .gray : .white)
                 .overlay {
                     if currentQuality == qualityList {
                         Circle()
                             .frame(width: 14, height: 14)
-                            .customColor(.primary)
+                            .customColor(disabled ? .background : .primary)
                     }
                 }
             
@@ -129,5 +192,6 @@ private struct QualityListCell: View {
         .onTapGesture {
             action(self.qualityList)
         }
+        .disabled(disabled)
     }
 }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import PhotosUI
 
 
 struct MainView: View {
@@ -35,6 +35,10 @@ struct MainView: View {
                 case .main:
                     MainScreen(viewModel: $viewModel)
                         .padding(.horizontal, 30)
+                        .photosPicker(
+                            isPresented: $viewModel.isPhotosPickerPresented,
+                            selection: $viewModel.photosPickerItem
+                        )
                     
                 case .setting:
                     SettingScreen(viewModel: $viewModel)
@@ -50,10 +54,19 @@ struct MainView: View {
             }
         }
         .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .tint(Color(hex: "#EA2264"))
+            }
+            
             if viewModel.isASCIIInfomationPresented {
                 ZStack {
                     Color.gray.opacity(0.7)
                         .ignoresSafeArea()
+                        .onTapGesture {
+                            viewModel.isASCIIInfomationPresented.toggle()
+                        }
                     
                     ArtInfoView {
                         viewModel.isASCIIInfomationPresented.toggle()
@@ -66,9 +79,17 @@ struct MainView: View {
                 ZStack {
                     Color.gray.opacity(0.5)
                         .ignoresSafeArea()
+                        .onTapGesture {
+                            self.viewModel.isImageGuidePresented = false
+                        }
                     
-                    ImageGuideView {
-                        viewModel.isImageGuidePresented.toggle()
+                    ImageGuideView { noMoreGuide in
+                        if noMoreGuide {
+                            UserDefaults.noMoreGuide = true
+                        }
+                        
+                        self.viewModel.isPhotosPickerPresented.toggle()
+                        self.viewModel.isImageGuidePresented = false
                     }
                     .padding(20)
                 }

@@ -21,7 +21,7 @@ struct SettingScreen: View {
             CustomNavigationBar(type: .setting) {
                 self.viewModel.screen = .main
                 self.viewModel.isSettingScreenPresented = false
-            }
+            } trailingButton: { EmptyView() }
             
             Button {
                 self.viewModel.screen = .history

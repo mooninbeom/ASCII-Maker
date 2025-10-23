@@ -9,68 +9,89 @@ import SwiftUI
 
 
 
-
 struct ImageGuideView: View {
-    let action: () -> Void
+    @State private var noMoreGuide: Bool = false
+    
+    let action: (Bool) -> Void
     
     var body: some View {
-            VStack(alignment: .leading) {
-                Text("사진 가이드")
-                    .koreanFont(size: 20)
-                    .foregroundStyle(.white)
+        VStack(alignment: .leading) {
+            Text("사진 가이드")
+                .koreanFont(size: 20)
+                .foregroundStyle(.white)
+            
+            
+            HStack {
+                Image(.doro)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 99)
                 
+                Text("✅")
                 
-                HStack {
-                    Image(.doro)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 99)
-                    
-                    Text("✅")
-                    
-                    Spacer()
-                    
-                    Image(.wrong)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 99)
-
-                    Text("❌")
-                }
+                Spacer()
                 
-                Text("""
+                Image(.wrong)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 99)
+                
+                Text("❌")
+            }
+            
+            Text("""
                      단순한 캐릭터 형식의 이미지를 추천합니다.
                      복잡한 배경이나 인물 사진은 변환 시
                      정확도가 떨어질 수 있습니다.
                      """)
-                .koreanFont(size: 15)
-                .customColor(.secondary)
-                
-                Button {
-                    action()
-                } label: {
-                    ZStack {
-                        Rectangle()
-                            .customColor(.primary)
-                            .frame(height: 50)
-                        
-                        Text("다음")
-                            .koreanFont(size: 20)
-                            .foregroundStyle(.white)
+            .koreanFont(size: 15)
+            .customColor(.secondary)
+            
+            HStack {
+                Circle()
+                    .frame(width: 20, height: 20)
+                    .foregroundStyle(.white)
+                    .overlay {
+                        if noMoreGuide {
+                            Circle()
+                                .frame(width: 14, height: 14)
+                                .customColor(.primary)
+                        }
                     }
+                
+                Text("더 이상 보지 않기")
+                    .koreanFont(size: 14)
+                    .foregroundStyle(.white)
+            }
+            .onTapGesture {
+                self.noMoreGuide.toggle()
+            }
+            .padding(.vertical, 10)
+            
+            Button {
+                action(self.noMoreGuide)
+            } label: {
+                ZStack {
+                    Rectangle()
+                        .customColor(.primary)
+                        .frame(height: 50)
+                    
+                    Text("다음")
+                        .koreanFont(size: 20)
+                        .foregroundStyle(.white)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 20)
-            .background {
-                Color(hex: "#0D1164")
-            }
-//        }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 20)
+        .background {
+            Color(hex: "#0D1164")
+        }
     }
 }
 
 
 
 #Preview {
-    ImageGuideView {}
+    ImageGuideView { _ in }
 }

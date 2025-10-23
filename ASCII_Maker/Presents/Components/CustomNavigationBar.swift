@@ -8,10 +8,15 @@
 import SwiftUI
 
 
-struct CustomNavigationBar: View {
+struct CustomNavigationBar<Content: View>: View {
     let type: NavigationList
     
+    let trailingButton: Content?
+    
     let dismiss: () -> Void
+    
+//    let trailingButton: String?
+//    let trailingAction: (() -> Void)?
     
     
     var body: some View {
@@ -33,6 +38,13 @@ struct CustomNavigationBar: View {
                 .koreanFont(size: 30)
                 .customColor(type.navigationColor)
             }
+            .overlay(alignment: .trailing) {
+                if let trailingButton = trailingButton {
+                    trailingButton
+                        .font(.system(size: 30))
+                        .customColor(type.navigationColor)
+                }
+            }
             
             Path { path in
                 let width = UIScreen.main.bounds.width
@@ -47,17 +59,29 @@ struct CustomNavigationBar: View {
         }
     }
     
+    init(
+        type: NavigationList,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder trailingButton: () -> Content
+    ) {
+        self.type = type
+        self.dismiss = dismiss
+        self.trailingButton = trailingButton()
+    }
+    
     
     enum NavigationList {
         case setting
         case history
         case developerInfo
+        case result
         
         public var navigationTitle: String {
             switch self {
             case .setting: "설정"
             case .history: "히스토리"
             case .developerInfo: "개발자 정보"
+            case .result: "결과"
             }
         }
         
@@ -65,6 +89,7 @@ struct CustomNavigationBar: View {
             switch self {
             case .setting, .developerInfo: .secondary
             case .history: .text
+            case .result: .primary
             }
         }
     }
