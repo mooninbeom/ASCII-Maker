@@ -10,17 +10,20 @@ import PhotosUI
 
 
 @Observable
-class MainViewModel {
+final class MainViewModel: Sendable {
     public var screen: ScreenList = .main
     
     public var quality: QualityList?
     public var isLoading: Bool = false
     public var resultText: String?
     
+    public var backgroundRemovedImage: UIImage?
+    
     public var isSettingScreenPresented: Bool = false
     
     public var isASCIIInfomationPresented: Bool = false
     public var isImageGuidePresented: Bool = false
+    public var isRemoveBackgroundFailureAlertPresented: Bool = false
     
     public var isPhotosPickerPresented: Bool = false
     public var currentImage: UIImage?
@@ -55,7 +58,7 @@ extension MainViewModel {
             self.isLoading = true
         }
         
-        guard let image = currentImage,
+        guard let image = backgroundRemovedImage ?? currentImage,
               let quality = quality
         else {
             DispatchQueue.main.async {
@@ -76,67 +79,100 @@ extension MainViewModel {
         }
     }
     
+    public func removeBackgroundButtonTapped() {
+        if backgroundRemovedImage != nil {
+            backgroundRemovedImage = nil
+            if let image = currentImage {
+                self.calibrateImage(image: image)
+            }
+            
+            return
+        }
+        
+        if let image = currentImage {
+            self.isLoading = true
+            
+            Task {
+                do {
+                    let result = try await image.removeBackground()
+                    DispatchQueue.main.async {
+                        self.backgroundRemovedImage = result
+                        self.calibrateImage(image: result)
+                        self.isLoading = false
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isRemoveBackgroundFailureAlertPresented = true
+                        self.isLoading = false
+                    }
+                }
+            }
+        }
+    }
     
     private func preprocessingImage() async throws {
         if let newItem = try await photosPickerItem?.loadTransferable(type: PhotoTransfer.self) {
             self.currentImage = newItem.image
+            calibrateImage(image: newItem.image)
+        }
+    }
+    
+    private func calibrateImage(image: UIImage) {
+        if let cgImage = image.cgImage {
+            let width = cgImage.width
+            let height = cgImage.height
+            let ratio = width / height
             
-            if let cgImage = newItem.image.cgImage {
-                let width = cgImage.width
-                let height = cgImage.height
-                let ratio = width / height
-                
-                self.currentPixels = (width, height)
-                
-                self.quality = .original
-                originalButton = false
-                
-                if ratio < 1 {
-                    if height < 100 {
-                        highButton = true
-                        mediumButton = true
-                        lowButton = true
-                    } else if height < 200 {
-                        highButton = true
-                        mediumButton = true
-                        lowButton = false
-                    } else if height < 400 {
-                        highButton = true
-                        mediumButton = false
-                        lowButton = false
-                    } else {
-                        highButton = false
-                        mediumButton = false
-                        lowButton = false
-                    }
+            self.currentPixels = (width, height)
+            
+            self.quality = .original
+            originalButton = false
+            
+            if ratio < 1 {
+                if height < 100 {
+                    highButton = true
+                    mediumButton = true
+                    lowButton = true
+                } else if height < 200 {
+                    highButton = true
+                    mediumButton = true
+                    lowButton = false
+                } else if height < 400 {
+                    highButton = true
+                    mediumButton = false
+                    lowButton = false
                 } else {
-                    if width < 100 {
-                        highButton = true
-                        mediumButton = true
-                        lowButton = true
-                    } else if width < 200 {
-                        highButton = true
-                        mediumButton = true
-                        lowButton = false
-                    } else if width < 400 {
-                        highButton = true
-                        mediumButton = false
-                        lowButton = false
-                    } else {
-                        highButton = false
-                        mediumButton = false
-                        lowButton = false
-                    }
+                    highButton = false
+                    mediumButton = false
+                    lowButton = false
                 }
-                
+            } else {
+                if width < 100 {
+                    highButton = true
+                    mediumButton = true
+                    lowButton = true
+                } else if width < 200 {
+                    highButton = true
+                    mediumButton = true
+                    lowButton = false
+                } else if width < 400 {
+                    highButton = true
+                    mediumButton = false
+                    lowButton = false
+                } else {
+                    highButton = false
+                    mediumButton = false
+                    lowButton = false
+                }
             }
+            
         }
     }
 }
 
 
 extension MainViewModel {
-    enum ScreenList: Identifiable {
+    enum ScreenList: Sendable, Identifiable {
         var id: Self { self }
         
         case main

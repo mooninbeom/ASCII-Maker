@@ -38,17 +38,24 @@ struct MainScreen: View {
             
             Button {
                 if UserDefaults.noMoreGuide {
+                    viewModel.backgroundRemovedImage = nil
                     viewModel.isPhotosPickerPresented.toggle()
                 } else {
                     viewModel.isImageGuidePresented.toggle()
                 }
             } label: {
                 if let uiImage = viewModel.currentImage {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                    
+                    if let removedImage = viewModel.backgroundRemovedImage {
+                        Image(uiImage: removedImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                    } else {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                    }
                 } else {
                     VStack {
                         Text("이미지 선택하기")
@@ -61,6 +68,28 @@ struct MainScreen: View {
             }
             .foregroundStyle(.white)
             .padding(.top, 50)
+            
+            Button {
+                viewModel.removeBackgroundButtonTapped()
+            } label: {
+                ZStack {
+                    if viewModel.currentImage == nil {
+                        Rectangle()
+                            .frame(width: 100, height: 40)
+                            .foregroundStyle(.gray)
+                    } else {
+                        Rectangle()
+                            .frame(width: 100, height: 40)
+                            .customColor(.primary)
+                    }
+                    
+                    Text(viewModel.backgroundRemovedImage == nil ? "배경 제거" : "취소")
+                        .koreanFont(size: 14)
+                        .foregroundStyle(.white)
+                }
+            }
+            .padding(.top, 5)
+            .disabled(viewModel.currentImage == nil)
             
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
