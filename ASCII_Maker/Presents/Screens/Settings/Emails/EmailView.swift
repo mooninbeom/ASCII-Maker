@@ -33,7 +33,7 @@ struct EmailView: UIViewControllerRepresentable {
             """
         
         vc.setToRecipients(["dlsqja567@naver.com"])
-        vc.setSubject("[Run Mile] 문의 메일")
+        vc.setSubject("[ASCII:llustrator] 문의 메일")
         vc.setMessageBody(body, isHTML: true)
         return vc
     }
