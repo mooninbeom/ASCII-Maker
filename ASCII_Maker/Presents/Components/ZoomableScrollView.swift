@@ -117,7 +117,17 @@ extension ZoomableScrollViewController: UIScrollViewDelegate {
         let image = renderer.image { context in
             label.drawHierarchy(in: label.bounds, afterScreenUpdates: true)
         }
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveImageCompletion), nil)
+    }
+    
+    @objc
+    private func saveImageCompletion(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer?) {
+        if let error = error {
+            print(error)
+            NotificationCenter.default.post(name: .saveImageResult, object: false)
+        } else {
+            NotificationCenter.default.post(name: .saveImageResult, object: true)
+        }
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {

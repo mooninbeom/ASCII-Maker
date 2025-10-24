@@ -9,6 +9,9 @@ import SwiftUI
 
 
 struct ResultScreen: View {
+    @State private var isSaveImageCompleteAlertPresented: Bool = false
+    @State private var isSaveImageFailureAlertPresented: Bool = false
+    
     @Binding var viewModel: MainViewModel
     
     var body: some View {
@@ -37,9 +40,34 @@ struct ResultScreen: View {
             ZoomableScrollView(text: viewModel.resultText ?? "알 수 없음")
         }
         .background(Color(hex: "#090B30"))
+        .overlay {
+            if isSaveImageCompleteAlertPresented {
+                SaveImageCompleteAlert()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            isSaveImageCompleteAlertPresented = false
+                        }
+                    }
+            }
+            
+            if isSaveImageFailureAlertPresented {
+                SaveImageFailureAlert()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            isSaveImageFailureAlertPresented = false
+                        }
+                    }
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .saveImageResult)) { result in
+            if let isSucceeded = result.object as? Bool {
+                if isSucceeded {
+                    self.isSaveImageCompleteAlertPresented = true
+                } else {
+                    self.isSaveImageFailureAlertPresented = true
+                }
+            }
+        }
     }
 }
 
-extension Notification.Name {
-    static let saveASCIIImage = Notification.Name("saveASCIIImage")
-}
