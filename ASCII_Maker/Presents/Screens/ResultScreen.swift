@@ -12,14 +12,15 @@ struct ResultScreen: View {
     @State private var isSaveImageCompleteAlertPresented: Bool = false
     @State private var isSaveImageFailureAlertPresented: Bool = false
     
-    @Binding var viewModel: MainViewModel
+    let resultText: String
+    let dismiss: () -> Void
     
     var body: some View {
         VStack(spacing: 0) {
             CustomNavigationBar(
                 type: .result,
                 dismiss: {
-                    viewModel.isResultScreenPresented = false
+                    dismiss()
                 },
                 trailingButton: {
                     HStack {
@@ -29,7 +30,7 @@ struct ResultScreen: View {
                             Image(systemName: "photo")
                         }
                         
-                        ShareLink(item: viewModel.resultText ?? "알 수 없음") {
+                        ShareLink(item: resultText) {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
@@ -37,7 +38,7 @@ struct ResultScreen: View {
             )
             .padding(.horizontal, 30)
             
-            ZoomableScrollView(text: viewModel.resultText ?? "알 수 없음")
+            ZoomableScrollView(text: resultText)
         }
         .background(Color(hex: "#090B30"))
         .overlay {

@@ -12,6 +12,9 @@ import MessageUI
 
 struct HistoryView: View {
     @State private var histories: [HistoryDTO] = []
+    @State private var isResultScreenPresented: Bool = false
+    
+    @State private var selectedHistory: HistoryDTO?
     
     @Binding var mainViewModel: MainViewModel
     
@@ -30,12 +33,22 @@ struct HistoryView: View {
                         history: history,
                         color: colorList[index%3]
                     )
+                    .onTapGesture {
+                        self.selectedHistory = history
+                    }
+                    .padding(.bottom, 10)
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .koreanFont(size: 30)
         .onAppear {
             histories = fetchHistory()
+        }
+        .fullScreenCover(item: $selectedHistory) { history in
+            ResultScreen(resultText: history.result) {
+                selectedHistory = nil
+            }
         }
     }
 }
@@ -51,6 +64,14 @@ struct HistoryCell: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 150, height: 150)
+            
+            Text(history.pixels)
+                .koreanFont(size: 20)
+                .customColor(color)
+            
+            Text(history.timestamp.toString())
+                .englishFont(size: 15)
+                .customColor(color)
             
             Path { path in
                 let width = UIScreen.main.bounds.width

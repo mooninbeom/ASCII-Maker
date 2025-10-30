@@ -113,7 +113,7 @@ extension MainViewModel {
     }
     
     private func saveHistory(result: String) {
-        let imageData = backgroundRemovedImage?.pngData() ?? currentImage?.pngData() ?? .init()
+        let imageData = backgroundRemovedImage?.jpegData(compressionQuality: 0.5) ?? currentImage?.jpegData(compressionQuality: 0.5) ?? .init()
         let result = result
         let pixels = self.quality!.text
         

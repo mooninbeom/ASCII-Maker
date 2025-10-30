@@ -167,7 +167,9 @@ struct MainScreen: View {
             .disabled(viewModel.transferButtonDisabled)
         }
         .fullScreenCover(isPresented: $viewModel.isResultScreenPresented) {
-            ResultScreen(viewModel: $viewModel)
+            ResultScreen(resultText: viewModel.resultText ?? "알 수 없음") {
+                viewModel.isResultScreenPresented = false
+            }
         }
     }
     
