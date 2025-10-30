@@ -11,13 +11,14 @@ import Combine
 
 struct ZoomableScrollView: UIViewControllerRepresentable {
     let text: String
+    @Binding var color: UIColor
     
     func makeUIViewController(context: Context) -> ZoomableScrollViewController {
-        .init(text: text)
+        .init(text: text, color: color)
     }
     
     func updateUIViewController(_ uiViewController: ZoomableScrollViewController, context: Context) {
-        
+        uiViewController.label.textColor = color
     }
 }
 
@@ -25,12 +26,14 @@ struct ZoomableScrollView: UIViewControllerRepresentable {
 
 class ZoomableScrollViewController: UIViewController {
     let text: String
+    var color: UIColor
     
     let imageSavePublisher = NotificationCenter.default.publisher(for: .saveASCIIImage)
     private var cancellables: Set<AnyCancellable> = []
     
-    init(text: String) {
+    init(text: String, color: UIColor) {
         self.text = text
+        self.color = color
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,7 +53,6 @@ class ZoomableScrollViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "JetBrainsMono-Light", size: 5)
-        label.textColor = UIColor(hex: "#EA2264")
         label.numberOfLines = 0
         return label
     }()
@@ -93,6 +95,7 @@ extension ZoomableScrollViewController: UIScrollViewDelegate {
         ])
         
         label.text = self.text
+        label.textColor = self.color
         scrollView.addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: scrollView.topAnchor),
