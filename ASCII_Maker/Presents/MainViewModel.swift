@@ -74,6 +74,8 @@ extension MainViewModel {
             DispatchQueue.main.async {
                 self.resultText = result
                 self.isResultScreenPresented = true
+                
+                self.saveHistory(result: result)
                 self.isLoading = false
             }
         }
@@ -108,6 +110,18 @@ extension MainViewModel {
                 }
             }
         }
+    }
+    
+    private func saveHistory(result: String) {
+        let imageData = backgroundRemovedImage?.pngData() ?? currentImage?.pngData() ?? .init()
+        let result = result
+        let pixels = self.quality!.text
+        
+        CoreDataManager.shared.saveHistory(
+            image: imageData,
+            result: result,
+            pixels: pixels
+        )
     }
     
     private func preprocessingImage() async throws {

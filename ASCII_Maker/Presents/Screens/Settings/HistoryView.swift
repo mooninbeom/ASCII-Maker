@@ -11,8 +11,11 @@ import MessageUI
 
 
 struct HistoryView: View {
+    @State private var histories: [HistoryDTO] = []
+    
     @Binding var mainViewModel: MainViewModel
     
+    private let colorList: [CustomColorModifier.ColorList] = [.text, .primary, .secondary]
     
     var body: some View {
         VStack {
@@ -22,22 +25,32 @@ struct HistoryView: View {
             .padding(.top, 30)
             
             ScrollView(.vertical) {
-                HistoryCell(color: .text)
-                HistoryCell(color: .primary)
-                HistoryCell(color: .secondary)
+                ForEach(Array(self.histories.enumerated()), id: \.0) { index, history in
+                    HistoryCell(
+                        history: history,
+                        color: colorList[index%3]
+                    )
+                }
             }
         }
         .koreanFont(size: 30)
+        .onAppear {
+            histories = fetchHistory()
+        }
     }
 }
 
 
 struct HistoryCell: View {
+    let history: HistoryDTO
     let color: CustomColorModifier.ColorList
     
     var body: some View {
         VStack {
-            Image(.doro)
+            Image(uiImage: history.image)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
             
             Path { path in
                 let width = UIScreen.main.bounds.width
@@ -59,14 +72,11 @@ struct HistoryCell: View {
 }
 
 
-
-
 extension HistoryView {
-    private func sendMail() {
-        
+    private func fetchHistory() -> [HistoryDTO] {
+        let results = CoreDataManager.shared.fetchHistory()
+        return results
     }
-    
-    
     
     private func evaluateMailAvailable() -> Bool {
         MFMailComposeViewController.canSendMail()
