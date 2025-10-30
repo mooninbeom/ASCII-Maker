@@ -22,7 +22,7 @@ struct ImageGuideView: View {
             
             
             HStack {
-                Image(.doro)
+                Image(.correct)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 99)
