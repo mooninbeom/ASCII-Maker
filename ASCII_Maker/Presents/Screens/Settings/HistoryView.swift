@@ -13,6 +13,7 @@ import MessageUI
 struct HistoryView: View {
     @State private var histories: [HistoryDTO] = []
     @State private var isResultScreenPresented: Bool = false
+    @State private var isResetHistoryAlertPresented: Bool = false
     
     @State private var selectedHistory: HistoryDTO?
     
@@ -24,7 +25,13 @@ struct HistoryView: View {
         VStack {
             CustomNavigationBar(type: .history) {
                 mainViewModel.screen = .setting
-            } trailingButton: { EmptyView() }
+            } trailingButton: {
+                Button {
+                    self.isResetHistoryAlertPresented.toggle()
+                } label: {
+                    Image(systemName: "gobackward")
+                }
+            }
             .padding(.top, 30)
             
             ScrollView(.vertical) {
@@ -42,8 +49,25 @@ struct HistoryView: View {
             .scrollIndicators(.hidden)
         }
         .koreanFont(size: 30)
+        .overlay {
+            if histories.isEmpty {
+                Text("히스토리가 비어있습니다.")
+                    .koreanFont(size: 20)
+                    .foregroundStyle(.white)
+            }
+        }
         .onAppear {
-            histories = fetchHistory()
+            fetchHistory()
+        }
+        .alert("초기화를 진행할까요?", isPresented: $isResetHistoryAlertPresented) {
+            Button("취소", role: .cancel) {}
+            
+            Button("초기화", role: .destructive) {
+                CoreDataManager.shared.resetHistory()
+                fetchHistory()
+            }
+        } message: {
+            Text("초기화된 히스토리는 복구할 수 없습니다.")
         }
         .fullScreenCover(item: $selectedHistory) { history in
             ResultScreen(resultText: history.result) {
@@ -94,9 +118,9 @@ struct HistoryCell: View {
 
 
 extension HistoryView {
-    private func fetchHistory() -> [HistoryDTO] {
+    private func fetchHistory() {
         let results = CoreDataManager.shared.fetchHistory()
-        return results
+        self.histories = results
     }
     
     private func evaluateMailAvailable() -> Bool {

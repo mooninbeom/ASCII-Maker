@@ -61,6 +61,18 @@ extension CoreDataManager {
             return []
         }
     }
+    
+    public func resetHistory() {
+        let context = self.persistentContainer.viewContext
+        
+        do {
+            let results = try self.loadHistories()
+            results.forEach { context.delete($0) }
+            self.saveContext()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 
