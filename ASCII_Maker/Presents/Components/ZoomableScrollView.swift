@@ -11,13 +11,14 @@ import Combine
 
 struct ZoomableScrollView: UIViewControllerRepresentable {
     let text: String
+    @Binding var color: UIColor
     
     func makeUIViewController(context: Context) -> ZoomableScrollViewController {
-        .init(text: text)
+        .init(text: text, color: color)
     }
     
     func updateUIViewController(_ uiViewController: ZoomableScrollViewController, context: Context) {
-        
+        uiViewController.label.textColor = color
     }
 }
 
@@ -25,12 +26,14 @@ struct ZoomableScrollView: UIViewControllerRepresentable {
 
 class ZoomableScrollViewController: UIViewController {
     let text: String
+    var color: UIColor
     
     let imageSavePublisher = NotificationCenter.default.publisher(for: .saveASCIIImage)
     private var cancellables: Set<AnyCancellable> = []
     
-    init(text: String) {
+    init(text: String, color: UIColor) {
         self.text = text
+        self.color = color
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,7 +53,6 @@ class ZoomableScrollViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "JetBrainsMono-Light", size: 5)
-        label.textColor = UIColor(hex: "#EA2264")
         label.numberOfLines = 0
         return label
     }()
@@ -93,6 +95,7 @@ extension ZoomableScrollViewController: UIScrollViewDelegate {
         ])
         
         label.text = self.text
+        label.textColor = self.color
         scrollView.addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -117,7 +120,17 @@ extension ZoomableScrollViewController: UIScrollViewDelegate {
         let image = renderer.image { context in
             label.drawHierarchy(in: label.bounds, afterScreenUpdates: true)
         }
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveImageCompletion), nil)
+    }
+    
+    @objc
+    private func saveImageCompletion(image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer?) {
+        if let error = error {
+            print(error)
+            NotificationCenter.default.post(name: .saveImageResult, object: false)
+        } else {
+            NotificationCenter.default.post(name: .saveImageResult, object: true)
+        }
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {

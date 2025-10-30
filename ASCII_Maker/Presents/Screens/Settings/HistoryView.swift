@@ -11,33 +11,91 @@ import MessageUI
 
 
 struct HistoryView: View {
+    @State private var histories: [HistoryDTO] = []
+    @State private var isResultScreenPresented: Bool = false
+    @State private var isResetHistoryAlertPresented: Bool = false
+    
+    @State private var selectedHistory: HistoryDTO?
+    
     @Binding var mainViewModel: MainViewModel
     
+    private let colorList: [CustomColorModifier.ColorList] = [.text, .primary, .secondary]
     
     var body: some View {
         VStack {
             CustomNavigationBar(type: .history) {
                 mainViewModel.screen = .setting
-            } trailingButton: { EmptyView() }
+            } trailingButton: {
+                Button {
+                    self.isResetHistoryAlertPresented.toggle()
+                } label: {
+                    Image(systemName: "gobackward")
+                }
+            }
             .padding(.top, 30)
             
             ScrollView(.vertical) {
-                HistoryCell(color: .text)
-                HistoryCell(color: .primary)
-                HistoryCell(color: .secondary)
+                ForEach(Array(self.histories.enumerated()), id: \.0) { index, history in
+                    HistoryCell(
+                        history: history,
+                        color: colorList[index%3]
+                    )
+                    .onTapGesture {
+                        self.selectedHistory = history
+                    }
+                    .padding(.bottom, 10)
+                }
             }
+            .scrollIndicators(.hidden)
         }
         .koreanFont(size: 30)
+        .overlay {
+            if histories.isEmpty {
+                Text("히스토리가 비어있습니다.")
+                    .koreanFont(size: 20)
+                    .foregroundStyle(.white)
+            }
+        }
+        .onAppear {
+            fetchHistory()
+        }
+        .alert("초기화를 진행할까요?", isPresented: $isResetHistoryAlertPresented) {
+            Button("취소", role: .cancel) {}
+            
+            Button("초기화", role: .destructive) {
+                CoreDataManager.shared.resetHistory()
+                fetchHistory()
+            }
+        } message: {
+            Text("초기화된 히스토리는 복구할 수 없습니다.")
+        }
+        .fullScreenCover(item: $selectedHistory) { history in
+            ResultScreen(resultText: history.result) {
+                selectedHistory = nil
+            }
+        }
     }
 }
 
 
 struct HistoryCell: View {
+    let history: HistoryDTO
     let color: CustomColorModifier.ColorList
     
     var body: some View {
         VStack {
-            Image(.doro)
+            Image(uiImage: history.image)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 150)
+            
+            Text(history.pixels)
+                .koreanFont(size: 20)
+                .customColor(color)
+            
+            Text(history.timestamp.toString())
+                .englishFont(size: 15)
+                .customColor(color)
             
             Path { path in
                 let width = UIScreen.main.bounds.width
@@ -59,14 +117,11 @@ struct HistoryCell: View {
 }
 
 
-
-
 extension HistoryView {
-    private func sendMail() {
-        
+    private func fetchHistory() {
+        let results = CoreDataManager.shared.fetchHistory()
+        self.histories = results
     }
-    
-    
     
     private func evaluateMailAvailable() -> Bool {
         MFMailComposeViewController.canSendMail()

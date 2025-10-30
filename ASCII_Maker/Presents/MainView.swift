@@ -88,11 +88,21 @@ struct MainView: View {
                             UserDefaults.noMoreGuide = true
                         }
                         
+                        self.viewModel.backgroundRemovedImage = nil
                         self.viewModel.isPhotosPickerPresented.toggle()
                         self.viewModel.isImageGuidePresented = false
                     }
                     .padding(20)
                 }
+            }
+            
+            if viewModel.isRemoveBackgroundFailureAlertPresented {
+                RemoveBackgroundFailureAlert()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            viewModel.isRemoveBackgroundFailureAlertPresented = false
+                        }
+                    }
             }
         }
     }

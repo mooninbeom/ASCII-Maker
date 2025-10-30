@@ -9,6 +9,8 @@ import SwiftUI
 
 
 struct MainScreen: View {
+    @State private var isPopoverPresented: Bool = false
+    
     @Binding var viewModel: MainViewModel
     
     var body: some View {
@@ -36,17 +38,24 @@ struct MainScreen: View {
             
             Button {
                 if UserDefaults.noMoreGuide {
+                    viewModel.backgroundRemovedImage = nil
                     viewModel.isPhotosPickerPresented.toggle()
                 } else {
                     viewModel.isImageGuidePresented.toggle()
                 }
             } label: {
                 if let uiImage = viewModel.currentImage {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                    
+                    if let removedImage = viewModel.backgroundRemovedImage {
+                        Image(uiImage: removedImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                    } else {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                    }
                 } else {
                     VStack {
                         Text("이미지 선택하기")
@@ -60,6 +69,28 @@ struct MainScreen: View {
             .foregroundStyle(.white)
             .padding(.top, 50)
             
+            Button {
+                viewModel.removeBackgroundButtonTapped()
+            } label: {
+                ZStack {
+                    if viewModel.currentImage == nil {
+                        Rectangle()
+                            .frame(width: 100, height: 40)
+                            .foregroundStyle(.gray)
+                    } else {
+                        Rectangle()
+                            .frame(width: 100, height: 40)
+                            .customColor(.primary)
+                    }
+                    
+                    Text(viewModel.backgroundRemovedImage == nil ? "배경 제거" : "취소")
+                        .koreanFont(size: 14)
+                        .foregroundStyle(.white)
+                }
+            }
+            .padding(.top, 5)
+            .disabled(viewModel.currentImage == nil)
+            
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
                     Group {
@@ -68,9 +99,28 @@ struct MainScreen: View {
                             .customColor(.text)
                         
                         if let currentPixels = viewModel.currentPixels {
-                            Text("현재 픽셀 수: \(currentPixels.0) x \(currentPixels.1)px")
-                                .koreanFont(size: 14)
-                                .foregroundStyle(.white)
+                            HStack(alignment: .center, spacing: 0) {
+                                Text("현재 픽셀 수: \(currentPixels.0) x \(currentPixels.1)px")
+                                    .koreanFont(size: 14)
+                                    .foregroundStyle(.white)
+                                
+                                if currentPixels.0 > 500 || currentPixels.1 > 500 {
+                                    Button {
+                                        self.isPopoverPresented.toggle()
+                                    } label: {
+                                        Image(systemName: "exclamationmark.circle")
+                                            .font(.system(size: 15))
+                                    }
+                                    .customColor(.primary)
+                                    .popover(isPresented: self.$isPopoverPresented) {
+                                        Text("현재 이미지가 너무 커 원본 변환 시 500 x 500px로 조절 됩니다.")
+                                            .koreanFont(size: 14)
+                                            .customColor(.secondary)
+                                            .presentationCompactAdaptation(.popover)
+                                            .presentationBackground(Color(hex: "#0D1164"))
+                                    }
+                                }
+                            }
                         }
                     }
                     .padding(.bottom, 10)
@@ -117,7 +167,9 @@ struct MainScreen: View {
             .disabled(viewModel.transferButtonDisabled)
         }
         .fullScreenCover(isPresented: $viewModel.isResultScreenPresented) {
-            ResultScreen(viewModel: $viewModel)
+            ResultScreen(resultText: viewModel.resultText ?? "알 수 없음") {
+                viewModel.isResultScreenPresented = false
+            }
         }
     }
     

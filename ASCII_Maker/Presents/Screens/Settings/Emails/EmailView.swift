@@ -14,7 +14,7 @@ struct EmailView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let vc = MFMailComposeViewController()
-        
+        vc.mailComposeDelegate = context.coordinator
         let body =
             """
             <html>
@@ -33,7 +33,7 @@ struct EmailView: UIViewControllerRepresentable {
             """
         
         vc.setToRecipients(["dlsqja567@naver.com"])
-        vc.setSubject("[Run Mile] 문의 메일")
+        vc.setSubject("[ASCII:llustrator] 문의 메일")
         vc.setMessageBody(body, isHTML: true)
         return vc
     }
@@ -44,11 +44,15 @@ struct EmailView: UIViewControllerRepresentable {
         .init(parent: self)
     }
     
-    class Coordinator: NSObject {
+    class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
         let parent: EmailView
         
         init(parent: EmailView) {
             self.parent = parent
+        }
+        
+        func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: (any Error)?) {
+            self.parent.dismiss()
         }
     }
 }
