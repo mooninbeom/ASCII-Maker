@@ -97,12 +97,26 @@ struct MainView: View {
             }
             
             if viewModel.isRemoveBackgroundFailureAlertPresented {
-                RemoveBackgroundFailureAlert()
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            viewModel.isRemoveBackgroundFailureAlertPresented = false
-                        }
+                CustomAlertView(
+                    title: "제거 실패!",
+                    bodyText:
+                """
+                배경 제거에 실패했습니다.
+                다른 이미지를 사용해주세요.
+                """
+                ) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        viewModel.isRemoveBackgroundFailureAlertPresented = false
                     }
+                }
+            }
+            
+            if viewModel.isEmailCopySuccessAlertPresented {
+                CustomAlertView(title: "복사 성공!", bodyText: "클립보드에 복사가 완료되었습니다.") {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        viewModel.isEmailCopySuccessAlertPresented = false
+                    }
+                }
             }
         }
     }

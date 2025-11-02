@@ -1,27 +1,28 @@
 //
-//  SaveImageFailureAlert.swift
+//  CustomAlertView.swift
 //  ASCII_Maker
 //
-//  Created by 문인범 on 10/23/25.
+//  Created by 문인범 on 11/2/25.
 //
 
 import SwiftUI
 
 
 
-struct SaveImageFailureAlert: View {
+
+struct CustomAlertView: View {
+    let title: String
+    let bodyText: String
+    
+    let onAppear: (() -> Void)?
+    
     var body: some View {
         VStack(spacing: 10) {
-            Text("저장 실패!")
+            Text(title)
                 .koreanFont(size: 20)
                 .customColor(.secondary)
             
-            Text(
-                """
-                저장에 실패했습니다.
-                앨범 사용 권한을 확인해주세요.
-                """
-            )
+            Text(bodyText)
             .koreanFont(size: 15)
             .foregroundStyle(.white)
         }
@@ -29,5 +30,6 @@ struct SaveImageFailureAlert: View {
         .background {
             Color(hex: "#0D1164")
         }
+        .onAppear(perform: onAppear)
     }
 }

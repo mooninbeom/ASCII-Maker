@@ -24,6 +24,7 @@ final class MainViewModel: Sendable {
     public var isASCIIInfomationPresented: Bool = false
     public var isImageGuidePresented: Bool = false
     public var isRemoveBackgroundFailureAlertPresented: Bool = false
+    public var isEmailCopySuccessAlertPresented: Bool = false
     
     public var isPhotosPickerPresented: Bool = false
     public var currentImage: UIImage?

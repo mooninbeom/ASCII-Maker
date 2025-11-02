@@ -73,21 +73,29 @@ struct ResultScreen: View {
         }
         .overlay {
             if isSaveImageCompleteAlertPresented {
-                SaveImageCompleteAlert()
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            isSaveImageCompleteAlertPresented = false
-                        }
+                CustomAlertView(
+                    title: "저장 완료!",
+                    bodyText: "앨범에 저장이 완료되었습니다.",
+                ) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSaveImageCompleteAlertPresented = false
                     }
+                }
             }
             
             if isSaveImageFailureAlertPresented {
-                SaveImageFailureAlert()
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            isSaveImageFailureAlertPresented = false
-                        }
+                CustomAlertView(
+                    title: "저장 실패!",
+                    bodyText:
+                """
+                저장에 실패했습니다.
+                앨범 사용 권한을 확인해주세요.
+                """
+                ) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        isSaveImageFailureAlertPresented = false
                     }
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .saveImageResult)) { result in
