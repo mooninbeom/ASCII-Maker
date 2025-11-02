@@ -33,7 +33,8 @@ struct DeveloperInfoScreen: View {
             
             VStack(alignment: .leading) {
                 Button {
-                    
+                    UIPasteboard.general.string = "dlsqja567@naver.com"
+                    mainViewModel.isEmailCopySuccessAlertPresented = true
                 } label: {
                     HStack(spacing: 5) {
                         Image(systemName: "envelope")
